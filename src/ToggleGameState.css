@@ -1,0 +1,14 @@
+.Toggle-game-state {
+    text-align: center;
+    margin-top: 20px; /* Changed to positive margin */
+    margin-bottom: 25px;
+  }
+  
+  .Input-select-size {
+    margin-top: 10px; /* Adjusted for better spacing */
+    margin-left: auto; /* Centered the select box */
+    margin-right: auto; /* Centered the select box */
+    margin-bottom: 25px;
+    display: inline-block; /* Ensure it takes only necessary space */
+  }
+  
