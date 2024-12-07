@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import { Button, FormControl, Select, MenuItem } from "@mui/material";
-
-const GAME_STATE = {
-  BEFORE: "BEFORE",
-  IN_PROGRESS: "IN_PROGRESS",
-  ENDED: "ENDED",
-};
+import { GAME_STATE } from "./GameState";
 
 function ToggleGameState({ gameState, setGameState, setSize, setTotalTime }) {
   const [buttonText, setButtonText] = useState("Start a new game!");
   const [startTime, setStartTime] = useState(0);
+  let deltaTime;
 
   const handleChange = (event) => {
     setSize(Number(event.target.value));

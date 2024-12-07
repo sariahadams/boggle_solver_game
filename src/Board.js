@@ -3,7 +3,7 @@ import Paper from "@material-ui/core/Paper";
 import React from 'react';
 import './Board.css';
 
-function Board() {
+function Board(board) {
   return (
     <div className="Board-div">
       <Grid container justifyContent="center">

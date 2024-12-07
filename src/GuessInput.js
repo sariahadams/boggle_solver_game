@@ -2,34 +2,36 @@ import React, { useState } from 'react';
 import TextField from "@material-ui/core/TextField";
 import './GuessInput.css';
 
-function GuessInput() {
-  const [guess, setGuess] = useState("");
-  const labelText = "Enter your guess:"; // Define labelText here
+function GuessInput({allSolutions, foundSolutions, correctAnswerCallback}) {
 
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      // Handle the enter key press, e.g., submit the guess
-      console.log("Submitted guess:", guess);
-      // You may want to clear the input after submission
-      setGuess("");
+  const [labelText, setLabelText] = useState("Make your first guess!");
+  const [input, setInput] = useState("");
+
+  function evaluateInput() {
+    if (foundSolutions.includes(input)) {
+      setLabelText(input + " has already been found!");
+    } else if (allSolutions.includes(input)) {
+      correctAnswerCallback(input);
+      setLabelText(input + " is correct!");
+    } else {
+      setLabelText(input + " is incorrect!");
     }
-  };
+  }
 
-  const handleChange = (event) => {
-    setGuess(event.target.value);
-  };
+  function keyPress(e) {
+    if (e.key === 'Enter') {
+      //e.target.value = "";
+      console.log(input);
+      evaluateInput()
+    }
+  }
 
   return (
     <div className="Guess-input">
       <div>
         {labelText}
       </div>
-      <TextField 
-        value={guess}
-        onChange={handleChange}
-        onKeyPress={handleKeyPress}
-        placeholder="Type your guess here"
-      />
+      <TextField onKeyPress={(e) => keyPress(e)} onChange={(event) => setInput(event.target.value.toUpperCase())} />
     </div>
   );
 }
