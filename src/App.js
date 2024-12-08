@@ -10,12 +10,6 @@ import logo from './logo.png';
 import './App.css';
 
 function App() {
-  // const [gameState, setGameState] = useState(GAME_STATE.BEFORE);
-  // const [size, setSize] = useState(3);
-  // const { totalTime, setTotalTime } = useState(0);
-  // const [board, setBoard] = useState([]);
-  // const [allSolutions, setAllSolutions] = useState([]);
-  // const [foundSolutions, setFoundSolutions] = useState([]);
   const obj = require('./Boggle_Solutions_Endpoint.json');
   const [allSolutions, setAllSolutions] = useState([]);  // solutions from solver
   const [foundSolutions, setFoundSolutions] = useState([]);  // found by user
@@ -30,7 +24,7 @@ function App() {
   useEffect(() => {
     let tmpAllSolutions = game.solutions;
     setAllSolutions(tmpAllSolutions);
-  }, [grid, game]);
+  }, [grid, game, gameState]);
 
   // This will run when the gameState changes
   useEffect(() => {
@@ -39,13 +33,14 @@ function App() {
       const g = myMap.get(size.toString());  // THIS WILL BE REPLACED WITH REST ENDPOINT in Assignment #5
       setGame(g);
       setAllSolutions(g.solutions);
+      // console.log(`Reset allSolutions: ${g.solutions.length}`);
       setGrid(g.grid);
       setFoundSolutions([]);
     }
   }, [gameState, size, myMap]);
 
   const correctAnswerFound = (answer) => {
-    console.log(`New correct answer: ${answer}`);
+    // console.log(`New correct answer: ${answer}`);
     const index = allSolutions.indexOf(answer);
     const copyAllSolutions = allSolutions;
     copyAllSolutions.splice(index, 1);
@@ -69,7 +64,7 @@ function App() {
           <GuessInput
             allSolutions={allSolutions}
             foundSolutions={foundSolutions}
-            correctAnswerCallback={(answer) => correctAnswerFound(answer)}/>
+            correctAnswerCallback={correctAnswerFound}/>
           <FoundSolutions headerText="Solutions you've found" words={foundSolutions} />
         </>
       )}
@@ -78,7 +73,7 @@ function App() {
         <>
           <Board board={grid} />
           <SummaryResults words={foundSolutions} totalTime={totalTime} />
-          <FoundSolutions headerText="Missed Words [wordsize > 3]: " words={allSolutions}  />
+          <FoundSolutions headerText="Missed Words [wordsize > 3]" words={allSolutions}  />
         </>)}
     </div>
   );

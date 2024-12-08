@@ -26,6 +26,7 @@ function GuessInput({ allSolutions, foundSolutions, correctAnswerCallback }) {
   function keyPress(e) {
     if (e.key === 'Enter') {
       // console.log(input);
+      e.target.value = "";
       evaluateInput()
     }
   }

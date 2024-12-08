@@ -6,11 +6,6 @@ function ToggleGameState({ gameState, setGameState, size, setSize, setTotalTime 
   const [buttonText, setButtonText] = useState("Start a new game!");
   const [startTime, setStartTime] = useState(0);
 
-  const handleSizeChange = (event) => {
-    setSize(Number(event.target.value));
-    // console.log("Size: ", event.target.value);
-  };
-
   const updateGameState = (endTime) => {
     if (gameState === GAME_STATE.BEFORE || gameState === GAME_STATE.ENDED) {
       setStartTime(Date.now());
@@ -24,11 +19,17 @@ function ToggleGameState({ gameState, setGameState, size, setSize, setTotalTime 
     }
   };
 
+  const handleSizeChange = (event) => {
+    setSize(Number(event.target.value));
+    // console.log("Size: ", event.target.value);
+  };
+
   return (
     <div className="Toggle-game-state">
       <Button variant="outlined" onClick={() => updateGameState(Date.now())}>
         {buttonText}
       </Button>
+
       {(gameState === GAME_STATE.BEFORE || gameState === GAME_STATE.ENDED) && (
         <div className="Input-select-size">
           <FormControl>
