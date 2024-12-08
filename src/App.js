@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Board from './Board.js';
 import GuessInput from './GuessInput.js';
@@ -10,7 +10,6 @@ import logo from './logo.png';
 import './App.css';
 
 function App() {
-  const obj = require('./Boggle_Solutions_Endpoint.json');
   const [allSolutions, setAllSolutions] = useState([]);  // solutions from solver
   const [foundSolutions, setFoundSolutions] = useState([]);  // found by user
   const [gameState, setGameState] = useState(GAME_STATE.BEFORE); // Just an enuerator or the three states see below
@@ -18,26 +17,48 @@ function App() {
   const [totalTime, setTotalTime] = useState(0);  // total time elapsed
   const [size, setSize] = useState(3);  // selected grid size
   const [game, setGame] = useState({}); // used to hold the MOCK REST ENDPOINTDATA 
-  const myMap = useMemo(() => new Map(Object.entries(obj)), [obj]); // cache this value so that it doesn't have to been refreshed everytime we visit the page.
 
-  // useEffect will trigger when the array items in the second argument are updated so whenever grid is updated, we will recompute the solutions
+  const Convert = (s) => {  // convert a string into an array of tokens that are strings
+    s = s.replace(/'/g, '');
+    s = s.replace('[', '');
+    s = s.replace(']', '');
+    const tokens = s.split(",") // Split the string into an array of tokens
+      .map(token => token.trim()) // Trim each token
+      .filter(token => token !== ''); // Remove empty tokens
+    return tokens;
+  }
+  // useEffect will trigger when the array items in the second argument are
+  // updated so whenever grid is updated, we will recompute the solutions
   useEffect(() => {
-    let tmpAllSolutions = game.solutions;
-    setAllSolutions(tmpAllSolutions);
-  }, [grid, game, gameState]);
+    if (typeof game.found_words !== "undefined") {
+      const tmpAllSolutions = Convert(game.found_words);
+      setAllSolutions(tmpAllSolutions);
+    }
+  }, [grid, game.found_words]);
 
   // This will run when the gameState changes
   useEffect(() => {
     if (gameState === GAME_STATE.IN_PROGRESS) {
-      // Make API call to get the game data
-      const g = myMap.get(size.toString());  // THIS WILL BE REPLACED WITH REST ENDPOINT in Assignment #5
-      setGame(g);
-      setAllSolutions(g.solutions);
-      // console.log(`Reset allSolutions: ${g.solutions.length}`);
-      setGrid(g.grid);
-      setFoundSolutions([]);
+      // const url = "https://floorlimit-radarbrush-8000.codio.io/api/game/create/" + size;
+      const url = "http://localhost:8000/api/game/create/" + size;
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log(`Game data: ${JSON.stringify(data)}`);
+          setGame(data);
+          const s = data.grid.replace(/'/g, '"');  //replace single ' with double "
+          setGrid(JSON.parse(s));
+          setFoundSolutions([]);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     }
-  }, [gameState, size, myMap]);
+  }, [gameState, size]);
+
+
+
+
 
   const correctAnswerFound = (answer) => {
     // console.log(`New correct answer: ${answer}`);
@@ -64,7 +85,7 @@ function App() {
           <GuessInput
             allSolutions={allSolutions}
             foundSolutions={foundSolutions}
-            correctAnswerCallback={correctAnswerFound}/>
+            correctAnswerCallback={correctAnswerFound} />
           <FoundSolutions headerText="Solutions you've found" words={foundSolutions} />
         </>
       )}
@@ -73,7 +94,7 @@ function App() {
         <>
           <Board board={grid} />
           <SummaryResults words={foundSolutions} totalTime={totalTime} />
-          <FoundSolutions headerText="Missed Words [wordsize > 3]" words={allSolutions}  />
+          <FoundSolutions headerText="Missed Words [wordsize > 3]" words={allSolutions} />
         </>)}
     </div>
   );

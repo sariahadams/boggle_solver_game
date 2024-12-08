@@ -36,7 +36,7 @@ function GuessInput({ allSolutions, foundSolutions, correctAnswerCallback }) {
       <div>
         {labelText}
       </div>
-      <TextField value={input} onKeyDown={(e) => keyPress(e)} onChange={(event) => setInput(event.target.value.toLowerCase())} />
+      <TextField value={input} onKeyDown={(e) => keyPress(e)} onChange={(event) => setInput(event.target.value.toUpperCase())} />
     </div>
   );
 }
