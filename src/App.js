@@ -46,6 +46,10 @@ function App() {
 
   const correctAnswerFound = (answer) => {
     console.log(`New correct answer: ${answer}`);
+    const index = allSolutions.indexOf(answer);
+    const copyAllSolutions = allSolutions;
+    copyAllSolutions.splice(index, 1);
+    setAllSolutions(copyAllSolutions);
     setFoundSolutions([...foundSolutions, answer]);
   };
 
@@ -57,7 +61,6 @@ function App() {
         setGameState={setGameState}
         size={size}
         setSize={setSize}
-        totalTime={totalTime}
         setTotalTime={setTotalTime} />
 
       {gameState === GAME_STATE.IN_PROGRESS && (

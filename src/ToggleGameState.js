@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { Button, FormControl, Select, MenuItem } from "@mui/material";
 import { GAME_STATE } from "./GameState";
 
-function ToggleGameState({ gameState, setGameState, size, setSize, totalTime, setTotalTime }) {
+function ToggleGameState({ gameState, setGameState, size, setSize, setTotalTime }) {
   const [buttonText, setButtonText] = useState("Start a new game!");
   const [startTime, setStartTime] = useState(0);
-  let deltaTime;
 
   const handleSizeChange = (event) => {
     setSize(Number(event.target.value));
