@@ -26,86 +26,57 @@ function App() {
   const [game, setGame] = useState({}); // used to hold the MOCK REST ENDPOINTDATA 
   const myMap = useMemo(() => new Map(Object.entries(obj)), [obj]); // cache this value so that it doesn't have to been refreshed everytime we visit the page.
 
+  // useEffect will trigger when the array items in the second argument are updated so whenever grid is updated, we will recompute the solutions
+  useEffect(() => {
+    let tmpAllSolutions = game.solutions;
+    setAllSolutions(tmpAllSolutions);
+  }, [grid, game]);
+
+  // This will run when the gameState changes
   useEffect(() => {
     if (gameState === GAME_STATE.IN_PROGRESS) {
-      setAllSolutions(generateSolutions());
+      // Make API call to get the game data
       const g = myMap.get(size.toString());  // THIS WILL BE REPLACED WITH REST ENDPOINT in Assignment #5
       setGame(g);
+      setAllSolutions(g.solutions);
       setGrid(g.grid);
       setFoundSolutions([]);
     }
-  }, [gameState, size]);
-
-  const generateBoard = (size) => {
-    return Array.from({ length: size }, () =>
-      Array.from({ length: size }, () => String.fromCharCode(65 + Math.floor(Math.random() * 26)))
-    );
-  };
-
-  const generateSolutions = () => {
-    return ["CAT", "DOG", "BIRD"]; //dummy data
-  };
+  }, [gameState, size, myMap]);
 
   const correctAnswerFound = (answer) => {
-    for (let i = 0; i < allSolutions.length; i++) {
-      if (allSolutions[i] === answer) {
-        setFoundSolutions([...foundSolutions, answer]);
-        break;
-      }
-    }
+    console.log(`New correct answer: ${answer}`);
+    setFoundSolutions([...foundSolutions, answer]);
   };
 
   return (
     <div className="App">
       <img src={logo} width="25%" height="25%" className="logo" alt="Bison Boggle Logo" />
-
-      {/* <ToggleGameState
+      <ToggleGameState
         gameState={gameState}
         setGameState={setGameState}
-        setSize={size}
-        setTotalTime={setSize}
-      /> */}
-        <ToggleGameState gameState={gameState}
-                       setGameState={setGameState} 
-                       setSize={(state) => setSize(state)}
-                       setTotalTime={(state) => setTotalTime(state)}/>
+        size={size}
+        setSize={setSize}
+        totalTime={totalTime}
+        setTotalTime={setTotalTime} />
 
-      {/* {gameState !== GAME_STATE.BEFORE && <Board board={board} />} */}
       {gameState === GAME_STATE.IN_PROGRESS && (
         <>
-          <Board />
+          <Board board={grid} />
           <GuessInput
             allSolutions={allSolutions}
             foundSolutions={foundSolutions}
-            correctAnswerCallback={correctAnswerFound}
-          //correctAnswerCallback={(answer) => correctAnswerFound(answer)}/>
-          />
-          <FoundSolutions />
-          {<FoundSolutions headerText="Solutions you've found" words={foundSolutions} /> }
+            correctAnswerCallback={(answer) => correctAnswerFound(answer)}/>
+          <FoundSolutions headerText="Solutions you've found" words={foundSolutions} />
         </>
       )}
 
       {gameState === GAME_STATE.ENDED && (
         <>
-          <Board />
-          <FoundSolutions headerText="Solutions you've found" words={foundSolutions} />
-          {/* <SummaryResults words={foundSolutions} totalTime={totalTime} />
           <Board board={grid} />
           <SummaryResults words={foundSolutions} totalTime={totalTime} />
-          <FoundSolutions headerText="Missed Words [wordsize > 3]: " words={allSolutions}  /> */}
+          <FoundSolutions headerText="Missed Words [wordsize > 3]: " words={allSolutions}  />
         </>)}
-
-      {/* <div>
-        <Board />
-        <GuessInput />
-        <FoundSolutions />
-      </div> */}
-      {/* 
-      <div>
-        <Board />
-        <SummaryResults />
-        <FoundSolutions />
-      </div> */}
     </div>
   );
 }

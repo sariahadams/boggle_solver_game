@@ -20,8 +20,7 @@ function GuessInput({allSolutions, foundSolutions, correctAnswerCallback}) {
 
   function keyPress(e) {
     if (e.key === 'Enter') {
-      //e.target.value = "";
-      console.log(input);
+      // console.log(input);
       evaluateInput()
     }
   }

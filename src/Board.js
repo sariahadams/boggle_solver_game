@@ -3,49 +3,24 @@ import Paper from "@material-ui/core/Paper";
 import React from 'react';
 import './Board.css';
 
-function Board(board) {
+function Board({ board }) {
   return (
     <div className="Board-div">
       <Grid container justifyContent="center">
-        <Grid item xs={12}>
-          <Grid container spacing={1} justifyContent="space-around">
-            <Grid item xs={1} className="Tile">
-              <Paper elevation={4}>A</Paper>
-            </Grid>
-            <Grid item xs={1} className="Tile">
-              <Paper elevation={4}>B</Paper>
-            </Grid>
-            <Grid item xs={1} className="Tile">
-              <Paper elevation={4}>C</Paper>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container spacing={1} justifyContent="space-around">
-            <Grid item xs={1} className="Tile">
-              <Paper elevation={4}>D</Paper>
-            </Grid>
-            <Grid item xs={1} className="Tile">
-              <Paper elevation={4}>E</Paper>
-            </Grid>
-            <Grid item xs={1} className="Tile">
-              <Paper elevation={4}>F</Paper>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container spacing={1} justifyContent="space-around">
-            <Grid item xs={1} className="Tile">
-              <Paper elevation={4}>G</Paper>
-            </Grid>
-            <Grid item xs={1} className="Tile">
-              <Paper elevation={4}>H</Paper>
-            </Grid>
-            <Grid item xs={1} className="Tile">
-              <Paper elevation={4}>I</Paper>
-            </Grid>
-          </Grid>
-        </Grid>
+        {board.length > 0 &&
+          board.map((row, rowIndex) => ((
+            <Grid key={`grid_${rowIndex}`} item xs={12}>
+              <Grid key={`grid_container_${rowIndex}`} container spacing={1} justifyContent="space-around">
+                {row.map((item, colIndex) => (
+                  <Grid key={`row${rowIndex}col${colIndex}`} item xs={1} className="Tile">
+                    <Paper key={`paper_row${rowIndex}col${colIndex}`} elevation={4}>{item}</Paper>
+                  </Grid>)
+                )
+                }
+              </Grid>
+            </Grid>)
+          ))
+        }
       </Grid>
     </div>
   );
